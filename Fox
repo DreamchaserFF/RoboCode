@@ -1,0 +1,82 @@
+package Fox;
+
+import robocode.Robot;
+import robocode.HitRobotEvent;
+import robocode.ScannedRobotEvent;
+import robocode.WinEvent;
+import static robocode.util.Utils.normalRelativeAngleDegrees;
+import java.awt.*;
+
+public class Fox extends Robot {
+
+	boolean peek; // Nao virar se houver um robo ali
+	double moveAmount; // O quanto se mover
+	/**
+	 * run: Mover pelas paredes
+	 */
+	public void run() {
+		// Set colors
+		setBodyColor(Color.pink);
+		setGunColor(Color.black);
+		setRadarColor(Color.pink);
+		setBulletColor(Color.red);
+		setScanColor(Color.black);
+
+		// Colocar moveAmount para o maximo possivel do campo
+		moveAmount = Math.max(getBattleFieldWidth(), getBattleFieldHeight());
+		// Colocar peek como falso
+		peek = false;
+
+		// turnLeft para encarar parede.
+		// getHeading() % 90 quer dizer o restante
+		// getHeading() dividido por 90
+		turnLeft(getHeading() % 90);
+		ahead(moveAmount);
+		// Virar a arma 90 graus pra direita
+		peek = true;
+		turnGunRight(90);
+		turnRight(90);
+
+		while (true) {
+			// Olhar antes de virar quando ahead() completar
+			peek = true;
+			// Ir pra parede
+			ahead(moveAmount);
+			// Não procurar inimigo agora
+			peek = false;
+			// Virar pra próxima parede
+			turnRight(90);
+		}
+	}
+
+	/**
+	 * onHitRobot:  Voltar um pouco.
+	 */
+	public void onHitRobot(HitRobotEvent e) {
+		// Se houver um inimigo na nossa frente, voltar um pouco pra trás.
+		if (e.getBearing() > -90 && e.getBearing() < 90) {
+			back(100);
+		} // Se ele estiver atras de nos, ir pra frente.
+		else {
+			ahead(100);
+		}
+	}
+
+	/**
+	 * onScannedRobot:  ATIRA!
+	 */
+	public void onScannedRobot(ScannedRobotEvent e) {
+		fire(2);
+		// Lembrar que o scan e automatico quando estamos nos movendo.
+		// Ao deixar automatico aqui, nos geramos outro scan mesmo se houver um tanque na proxima parede, pra que nos nao nos movamos ate ele sair.
+		if (peek) {
+			scan();
+		}
+	}
+	public void onWin(WinEvent e) {
+		for (int i = 0; i < 50; i++) {
+			turnRight(30);
+			turnLeft(30);
+		}
+	}
+}
