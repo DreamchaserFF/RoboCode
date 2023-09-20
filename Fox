@@ -1,4 +1,4 @@
-package Fox;
+package fox;
 
 import robocode.Robot;
 import robocode.HitRobotEvent;
@@ -7,7 +7,7 @@ import robocode.WinEvent;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 import java.awt.*;
 
-public class Fox extends Robot {
+public class fox extends Robot {
 
 	boolean peek; // Nao virar se houver um robo ali
 	double moveAmount; // O quanto se mover
@@ -19,8 +19,8 @@ public class Fox extends Robot {
 		setBodyColor(Color.pink);
 		setGunColor(Color.black);
 		setRadarColor(Color.pink);
-		setBulletColor(Color.red);
-		setScanColor(Color.black);
+		setBulletColor(Color.white);
+		setScanColor(Color.blue);
 
 		// Colocar moveAmount para o maximo possivel do campo
 		moveAmount = Math.max(getBattleFieldWidth(), getBattleFieldHeight());
@@ -66,7 +66,7 @@ public class Fox extends Robot {
 	 * onScannedRobot:  ATIRA!
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
-		fire(2);
+		fire(3);
 		// Lembrar que o scan e automatico quando estamos nos movendo.
 		// Ao deixar automatico aqui, nos geramos outro scan mesmo se houver um tanque na proxima parede, pra que nos nao nos movamos ate ele sair.
 		if (peek) {
