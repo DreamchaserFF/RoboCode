@@ -34,7 +34,7 @@ public class fox extends Robot {
 		ahead(moveAmount);
 		// Virar a arma 90 graus pra direita
 		peek = true;
-		turnGunRight(90);
+		turnGunRight(70);
 		turnRight(90);
 
 		while (true) {
