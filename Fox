@@ -34,7 +34,7 @@ public class fox extends Robot {
 		ahead(moveAmount);
 		// Virar a arma 90 graus pra direita
 		peek = true;
-		turnGunRight(90);
+		turnGunRight(70);
 		turnRight(90);
 
 		while (true) {
@@ -66,7 +66,7 @@ public class fox extends Robot {
 	 * onScannedRobot:  ATIRA!
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
-		fire(3);
+		fire(2);
 		// Lembrar que o scan e automatico quando estamos nos movendo.
 		// Ao deixar automatico aqui, nos geramos outro scan mesmo se houver um tanque na proxima parede, pra que nos nao nos movamos ate ele sair.
 		if (peek) {
