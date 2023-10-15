@@ -1,26 +1,43 @@
-package fox;
+package FOX2;//pacote do meu robo
 
+
+import robocode.*;//importação do robocode
+import static robocode.util.Utils.normalRelativeAngleDegrees; //torna os angulos normais em relativos, permitindo a movimentação em espiral
+import java.awt.*;//importação padrão gráfica do java
 import robocode.Robot;
 import robocode.HitRobotEvent;
 import robocode.ScannedRobotEvent;
 import robocode.WinEvent;
-import static robocode.util.Utils.normalRelativeAngleDegrees;
-import java.awt.*;
+import robocode.HitWallEvent;
 
-public class fox extends Robot {
+public class FOX2 extends AdvancedRobot {
+	boolean movingForward;
+	boolean inWall; // // coloca como "true" assim que o robo esta perto da parede, possibilitando determinar comandos como onHitWall.
+// O comando "inwall = true" vai definir se ele está distante 50px, senão (else) "inwall = false"
+	
 
-	boolean peek; // Nao virar se houver um robo ali
+
+	public void run() {
+		// Set colors
+		setColors(Color.gray,Color.black,Color.orange,Color.orange,Color.green);
+		setMaxVelocity(1000);
+
+		//	Torna cada elemento do robo independente
+		setAdjustRadarForRobotTurn(true);
+		setAdjustGunForRobotTurn(true);
+		setAdjustRadarForGunTurn(true);
+		
+	// Como eu não quero que o robo acerte a parede ou enfrente algo relacionado a parede, o robo continuamente fica checando se está a 50px da parede
+		if (getX() <= 50 || getY() <= 50 || getBattleFieldWidth() - getX() <= 50 || getBattleFieldHeight() - getY() <= 50) {
+				inWall = true;
+			} else {
+			inWall = false;
+		}
+		boolean peek; // Nao virar se houver um robo ali
 	double moveAmount; // O quanto se mover
 	/**
 	 * run: Mover pelas paredes
 	 */
-	public void run() {
-		// Set colors
-		setBodyColor(Color.pink);
-		setGunColor(Color.black);
-		setRadarColor(Color.pink);
-		setBulletColor(Color.white);
-		setScanColor(Color.blue);
 
 		// Colocar moveAmount para o maximo possivel do campo
 		moveAmount = Math.max(getBattleFieldWidth(), getBattleFieldHeight());
@@ -34,7 +51,7 @@ public class fox extends Robot {
 		ahead(moveAmount);
 		// Virar a arma 90 graus pra direita
 		peek = true;
-		turnGunRight(70);
+		turnGunRight(90);
 		turnRight(90);
 
 		while (true) {
@@ -46,9 +63,16 @@ public class fox extends Robot {
 			peek = false;
 			// Virar pra próxima parede
 			turnRight(90);
+			if (getRadarTurnRemaining() == 0.0){
+			setTurnRadarRight(360);
+			}
+			
+			execute(); // executa
 		}
 	}
 
+	
+			
 	/**
 	 * onHitRobot:  Voltar um pouco.
 	 */
@@ -59,24 +83,44 @@ public class fox extends Robot {
 		} // Se ele estiver atras de nos, ir pra frente.
 		else {
 			ahead(100);
+			}
+			// garante que se o radar parar, o robo vai procurar outro inimigo
+		
 		}
-	}
 
-	/**
-	 * onScannedRobot:  ATIRA!
-	 */
+	
 	public void onScannedRobot(ScannedRobotEvent e) {
-		fire(2);
-		// Lembrar que o scan e automatico quando estamos nos movendo.
-		// Ao deixar automatico aqui, nos geramos outro scan mesmo se houver um tanque na proxima parede, pra que nos nao nos movamos ate ele sair.
-		if (peek) {
+		// calcula a localizacao exata do robo inimigo escaneado
+		double absoluteBearing = getHeading() + e.getBearing();
+		double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
+		double bearingFromRadar = normalRelativeAngleDegrees(absoluteBearing - getRadarHeading());
+		
+
+		// perto o suficiente? atire
+	
+			setTurnGunRight(bearingFromGun); 
+			setTurnRadarRight(bearingFromRadar);	
+					//mantem o radar no inimigo
+			
+			
+		if (getGunHeat() == 0 && getEnergy() > .2) { 
+				fire(Math.min(4.5 - Math.abs(bearingFromGun) / 2 - e.getDistance() / 250, getEnergy() - .1));
+			} 
+			
+		else {
+			setTurnGunRight(bearingFromGun);
+			setTurnRadarRight(bearingFromRadar);
+		}
+		// gera outro scan, se ver outro robo
+		// AVISO -----------------> É SÓ UMA PRECAUÇÃO, CASO O RADAR FALHE!
+		if (bearingFromGun == 4) {
 			scan();
 		}
 	}
-	public void onWin(WinEvent e) {
-		for (int i = 0; i < 50; i++) {
-			turnRight(30);
-			turnLeft(30);
-		}
-	}
-}
+}	
+
+	/**
+	 * onHitRobot:  recua
+	 */
+
+
