@@ -1,4 +1,4 @@
-package FOX2;//pacote do meu robo
+package fox;//pacote do meu robo
 
 
 import robocode.*;//importação do robocode
@@ -10,7 +10,7 @@ import robocode.ScannedRobotEvent;
 import robocode.WinEvent;
 import robocode.HitWallEvent;
 
-public class FOX2 extends AdvancedRobot {
+public class fox extends AdvancedRobot {
 	boolean movingForward;
 	boolean inWall; // // coloca como "true" assim que o robo esta perto da parede, possibilitando determinar comandos como onHitWall.
 // O comando "inwall = true" vai definir se ele está distante 50px, senão (else) "inwall = false"
@@ -67,7 +67,7 @@ public class FOX2 extends AdvancedRobot {
 			setTurnRadarRight(360);
 			}
 			
-			execute(); // executa
+		
 		}
 	}
 
@@ -112,7 +112,6 @@ public class FOX2 extends AdvancedRobot {
 			setTurnRadarRight(bearingFromRadar);
 		}
 		// gera outro scan, se ver outro robo
-		// AVISO -----------------> É SÓ UMA PRECAUÇÃO, CASO O RADAR FALHE!
 		if (bearingFromGun == 4) {
 			scan();
 		}
@@ -122,5 +121,4 @@ public class FOX2 extends AdvancedRobot {
 	/**
 	 * onHitRobot:  recua
 	 */
-
 
