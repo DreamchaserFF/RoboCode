@@ -1,9 +1,9 @@
-package fox;//pacote do meu robo
+package fox;
 
 
 import robocode.*;//importação do robocode
-import static robocode.util.Utils.normalRelativeAngleDegrees; //torna os angulos normais em relativos, permitindo a movimentação em espiral
-import java.awt.*;//importação padrão gráfica do java
+import static robocode.util.Utils.normalRelativeAngleDegrees;
+import java.awt.*;//importação gráfica
 import robocode.Robot;
 import robocode.HitRobotEvent;
 import robocode.ScannedRobotEvent;
@@ -12,22 +12,20 @@ import robocode.HitWallEvent;
 
 public class fox extends AdvancedRobot {
 	boolean movingForward;
-	boolean inWall; // // coloca como "true" assim que o robo esta perto da parede, possibilitando determinar comandos como onHitWall.
-// O comando "inwall = true" vai definir se ele está distante 50px, senão (else) "inwall = false"
+	boolean inWall; 
 	
 
 
 	public void run() {
 		// Set colors
 		setColors(Color.gray,Color.black,Color.orange,Color.orange,Color.green);
-		setMaxVelocity(1000);
+		setMaxVelocity(1000); //Acabou não fazendo nada
 
-		//	Torna cada elemento do robo independente
+		// Torna cada elemento do robo independente
 		setAdjustRadarForRobotTurn(true);
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);
 		
-	// Como eu não quero que o robo acerte a parede ou enfrente algo relacionado a parede, o robo continuamente fica checando se está a 50px da parede
 		if (getX() <= 50 || getY() <= 50 || getBattleFieldWidth() - getX() <= 50 || getBattleFieldHeight() - getY() <= 50) {
 				inWall = true;
 			} else {
@@ -84,13 +82,13 @@ public class fox extends AdvancedRobot {
 		else {
 			ahead(100);
 			}
-			// garante que se o radar parar, o robo vai procurar outro inimigo
+			// O robo vai procurar outro inimigo
 		
 		}
 
 	
 	public void onScannedRobot(ScannedRobotEvent e) {
-		// calcula a localizacao exata do robo inimigo escaneado
+		// localização do inimigo
 		double absoluteBearing = getHeading() + e.getBearing();
 		double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
 		double bearingFromRadar = normalRelativeAngleDegrees(absoluteBearing - getRadarHeading());
