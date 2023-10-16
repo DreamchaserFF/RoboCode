@@ -115,8 +115,3 @@ public class fox extends AdvancedRobot {
 		}
 	}
 }	
-
-	/**
-	 * onHitRobot:  recua
-	 */
-
