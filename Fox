@@ -14,8 +14,6 @@ public class fox extends AdvancedRobot {
 	boolean movingForward;
 	boolean inWall; 
 	
-
-
 	public void run() {
 		// Set colors
 		setColors(Color.gray,Color.black,Color.orange,Color.orange,Color.green);
@@ -32,9 +30,7 @@ public class fox extends AdvancedRobot {
 			inWall = false;
 		}
 		boolean peek; // Nao virar se houver um robo ali
-	double moveAmount; // O quanto se mover
-	
-	 // run: Mover pelas paredes
+	double moveAmount; // O quanto se mover	
 	
 
 		// Colocar moveAmount para o maximo possivel do campo
@@ -64,8 +60,6 @@ public class fox extends AdvancedRobot {
 			if (getRadarTurnRemaining() == 0.0){
 			setTurnRadarRight(360);
 			}
-			
-		
 		}
 	}
 
@@ -74,23 +68,17 @@ public class fox extends AdvancedRobot {
 		double absoluteBearing = getHeading() + e.getBearing();
 		double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
 		double bearingFromRadar = normalRelativeAngleDegrees(absoluteBearing - getRadarHeading());
-		
-
-		// perto o suficiente? atire
-	
+		// Virar a arma para a direçao do inimigo e radar tambem
 			setTurnGunRight(bearingFromGun); 
 			setTurnRadarRight(bearingFromRadar);	
-					//mantem o radar no inimigo
-			
-			
+		//mantem o radar no inimigo
 		if (getGunHeat() == 0 && getEnergy() > .2) { 
 				fire(Math.min(10 - Math.abs(bearingFromGun) / 2 - e.getDistance() / 250, getEnergy() - .1));
 			} 
-			
+		//Caso não funcione, procurar inimigo de novo
 		else {
 			setTurnGunRight(bearingFromGun);
 			setTurnRadarRight(bearingFromRadar);
 		}
-
 	}
 }	
