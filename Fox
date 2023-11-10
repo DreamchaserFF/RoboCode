@@ -69,24 +69,6 @@ public class fox extends AdvancedRobot {
 		}
 	}
 
-	
-			
-	
-	 // onHitRobot:  Voltar um pouco.
-	 
-	public void onHitRobot(HitRobotEvent e) {
-		// Se houver um inimigo na nossa frente, voltar um pouco pra trás.
-		if (e.getBearing() > -90 && e.getBearing() < 90) {
-			back(100);
-		} // Se ele estiver atras de nos, ir pra frente.
-		else {
-			ahead(100);
-			}
-			// O robo vai procurar outro inimigo
-		
-		}
-
-	
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// localização do inimigo
 		double absoluteBearing = getHeading() + e.getBearing();
@@ -102,16 +84,13 @@ public class fox extends AdvancedRobot {
 			
 			
 		if (getGunHeat() == 0 && getEnergy() > .2) { 
-				fire(Math.min(4.5 - Math.abs(bearingFromGun) / 2 - e.getDistance() / 250, getEnergy() - .1));
+				fire(Math.min(10 - Math.abs(bearingFromGun) / 2 - e.getDistance() / 250, getEnergy() - .1));
 			} 
 			
 		else {
 			setTurnGunRight(bearingFromGun);
 			setTurnRadarRight(bearingFromRadar);
 		}
-		// gera outro scan, se ver outro robo
-		if (bearingFromGun == 4) {
-			scan();
-		}
+
 	}
 }	
